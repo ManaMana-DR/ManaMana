@@ -4,13 +4,7 @@ import { Chip } from "react-native-paper";
 
 import { Text, View } from "../components/Themed";
 
-interface Filters {
-  kosher: boolean;
-  notKosher: boolean;
-  vegan: boolean;
-}
-
-const cuisine = [
+const cuisineTypeOptions = [
   {
     Names: {
       He: "אסייתי",
@@ -227,21 +221,38 @@ const cuisine = [
     IconImageUrl:
       "https://tenbis-static.azureedge.net/restaurant-cuisine-type-icon-image/bar.png",
   },
-];
+] as const;
 
-const preferences: { key: keyof Filters; text: string }[] = [
+type CuisineTypeIds = typeof cuisineTypeOptions[number]["Id"];
+
+const preferencesOptions = [
   { key: "kosher", text: "Kosher" },
   { key: "notKosher", text: "Not Kosher" },
   { key: "vegan", text: "Vegan" },
-];
+  { key: "glutenFree", text: "Gluten Free" },
+] as const;
+
+type PreferencesOptions = typeof preferencesOptions[number]["key"];
 
 export default function FiltersScreen() {
-  const [filters, setFilters] = useState<Partial<Filters>>({});
-  const [cuisineTypes, setCuisineTypes] = useState(cuisine);
+  const [preferences, setPreferences] = useState<
+    Partial<Record<PreferencesOptions, boolean>>
+  >({});
 
-  const handleChipPress = (key: keyof Filters) => {
-    setFilters((filters) => ({ ...filters, [key]: !filters[key] }));
+  const [cuisineTypes, setCuisineTypes] = useState<CuisineTypeIds[]>([]);
+
+  const handlePreferencePress = (key: PreferencesOptions) => {
+    setPreferences((filters) => ({ ...filters, [key]: !filters[key] }));
   };
+
+  const handleCuisineTypesPress = (key: CuisineTypeIds) => {
+    if(cuisineTypes.includes(key)){
+      setCuisineTypes(cuisineTypes.filter(cuisineType => cuisineType !== key))
+    } else {
+      setCuisineTypes([...cuisineTypes, key])
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Filters</Text>
@@ -254,16 +265,17 @@ export default function FiltersScreen() {
       <View
         style={{
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: "center",
           flexDirection: "row",
           flexWrap: "wrap",
         }}
       >
-        {preferences.map((preference) => (
+        {preferencesOptions.map((preference) => (
           <Chip
+            key={preference.key}
             style={{ margin: 5 }}
-            selected={filters[preference.key]}
-            onPress={() => handleChipPress(preference.key)}
+            selected={preferences[preference.key]}
+            onPress={() => handlePreferencePress(preference.key)}
           >
             {preference.text}
           </Chip>
@@ -281,17 +293,19 @@ export default function FiltersScreen() {
       <View
         style={{
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: "center",
           flexDirection: "row",
           flexWrap: "wrap",
         }}
       >
-        {cuisineTypes.map((cuisineType) => (
+        {cuisineTypeOptions.map((cuisineTypeOption) => (
           <Chip
-            key={cuisineType.Id}
-            // onPress={() => handleChipPress(cuisineType.Id)}
+            style={{ margin: 2 }}
+            key={cuisineTypeOption.Id}
+            onPress={() => handleCuisineTypesPress(cuisineTypeOption.Id)}
+            selected={cuisineTypes?.includes(cuisineTypeOption.Id)}
           >
-            {cuisineType.Names.He}
+            {cuisineTypeOption.Names.En}
           </Chip>
         ))}
       </View>
