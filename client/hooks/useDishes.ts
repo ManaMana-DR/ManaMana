@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { CuisineTypeIds, PreferencesType } from '../screens/FiltersScreen';
 
 export interface IDish {
 	id: string;
@@ -30,10 +31,12 @@ const mockData: IDish[] = [{
 }
 ];
 
-async function getDishes(): Promise<IDish[]> {
-	return Promise.resolve(mockData);
+async function getDishes(params: GetDishesParams): Promise<IDish[]> {
 	try {
-		const { data } = await axios.get<IDish[]>('/api/dishes');
+		const { data } = await axios.post<IDish[]>('https://e28b-82-166-197-220.ngrok.io/random-dishes', {
+			userFilters: params.preferences,
+			userFoodTypes: params.cuisineTypes
+		});
 		return data;
 	} catch (e) {
 		console.error('Failed to get dishes from th server', e);
@@ -41,7 +44,9 @@ async function getDishes(): Promise<IDish[]> {
 	}
 }
 
-export function useGetDishes() {
+type GetDishesParams = { preferences: PreferencesType[], cuisineTypes: CuisineTypeIds[] };
+
+export function useGetDishes(params: GetDishesParams) {
 	const [dishes, setDishes] = useState<IDish[]>();
 	const [error, setError] = useState<Error>();
 	const [isLoading, setIsLoading] = useState(false);
@@ -49,7 +54,7 @@ export function useGetDishes() {
 	useEffect(() => {
 		setIsLoading(true);
 
-		getDishes().then((data) => {
+		getDishes(params).then((data) => {
 			setDishes(data);
 		}).catch((err) => {
 			setError(err);
