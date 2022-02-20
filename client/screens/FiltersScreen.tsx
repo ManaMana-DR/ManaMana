@@ -246,16 +246,18 @@ export default function FiltersScreen() {
   };
 
   const handleCuisineTypesPress = (key: CuisineTypeIds) => {
-    if(cuisineTypes.includes(key)){
-      setCuisineTypes(cuisineTypes.filter(cuisineType => cuisineType !== key))
+    if (cuisineTypes.includes(key)) {
+      setCuisineTypes(
+        cuisineTypes.filter((cuisineType) => cuisineType !== key)
+      );
     } else {
-      setCuisineTypes([...cuisineTypes, key])
+      setCuisineTypes([...cuisineTypes, key]);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Filters</Text>
+      <Text style={styles.title}>Preferences</Text>
       <View
         style={styles.separator}
         lightColor="#eee"
@@ -288,7 +290,12 @@ export default function FiltersScreen() {
         darkColor="rgba(255,255,255,0.1)"
       />
 
-      <Text style={{ fontSize: 16, fontWeight: "bold" }}>Preferences</Text>
+      <Text style={styles.title}>Cuisine Types</Text>
+      <View
+        style={styles.separator}
+        lightColor="#eee"
+        darkColor="rgba(255,255,255,0.1)"
+      />
 
       <View
         style={{
