@@ -7,8 +7,8 @@ from pydantic import BaseModel, validator
 from consts import FILTERS_TO_FIELD
 
 NUMBER_OF_OPTIONS = 10
-USER_FILTERS = ['kosher', 'vegan']
-USER_FOOD_TYPES = ['asianFusion', 'meatGrill', 'pizza']
+# USER_FILTERS = ['kosher', 'vegan']
+# USER_FOOD_TYPES = ['asianFusion', 'meatGrill', 'pizza']
 
 
 class Restaurant(BaseModel):
@@ -48,9 +48,9 @@ class SelectedDish(BaseModel):
 	dish: Dish
 
 
-def main():
+def get_random_dishes(filters, food_types):
 	restaurants = get_restaurants()
-	restaurants: List[Restaurant] = choose_restaurants(restaurants)
+	restaurants: List[Restaurant] = choose_restaurants(restaurants, filters, food_types)
 	selected_dishes = []
 	for rest in restaurants:
 		dishes = get_menu_for_restaurant(rest.restaurantId)
@@ -62,11 +62,12 @@ def main():
 			selected_dish = choice(main_dishes, 1)[0]
 		selected_dishes.append(SelectedDish(restaurant=rest, dish=selected_dish))
 	print([(dish.dish.dishName, dish.restaurant.restaurantName) for dish in selected_dishes])
+	return selected_dishes
 
 
 def get_restaurants():
 	response = requests.get(
-		'https://www.10bis.co.il/NextApi/searchRestaurants?culture=he-IL&uiCulture=he&deliveryMethod=delivery&addressId=6692178&cityId=24&cityName=%D7%AA%D7%9C+%D7%90%D7%91%D7%99%D7%91-%D7%99%D7%A4%D7%95&streetId=67386&streetName=%D7%AA%D7%95%D7%A6%D7%A8%D7%AA+%D7%94%D7%90%D7%A8%D7%A5&houseNumber=6&longitude=34.796228&latitude=32.0733094&isCompanyAddress=true&restaurantDeliversToAddress=false')
+		'https://www.10bis.co.il/NextApi/searchRestaurants?culture=he-IL&uiCulture=he&deliveryMethod=delivery&addressId=6692178&cityId=24&cityName=%D7%AA%D7%9C+%D7%90%D7%91%D7%99%D7%91-%D7%99%D7%A4%D7%95&streetId=67386&streetName=%D7%AA%D7%95%D7%A6%D7%A8%D7%AA+%D7%94%D7%90%D7%A8%D7%A5&houseNumber=6&longitude=34.796228&latitude=32.0733094&isCompanyAddress=True&restaurantDeliversToAddress=false')
 	print(response)
 	return [Restaurant(**rest, isNotKosher=rest['isKosher']) for rest in response.json()['Data']['restaurantsList']]
 
@@ -82,8 +83,8 @@ def get_menu_for_restaurant(restaurant_id: int):
 	return dishes
 
 
-def choose_restaurants(restaurants: List[Restaurant]):
-	restaurants = filter_restaurants(restaurants, USER_FILTERS, USER_FOOD_TYPES)
+def choose_restaurants(restaurants: List[Restaurant], user_filters, user_food_types):
+	restaurants = filter_restaurants(restaurants, user_filters, user_food_types)
 	chosen_restaurants = choice(restaurants, NUMBER_OF_OPTIONS, p=get_probability(restaurants))
 	return chosen_restaurants
 
@@ -94,8 +95,8 @@ def get_probability(restaurants: List[Restaurant]) -> List[float]:
 
 
 def is_restaurant_in_filters(restaurant: Restaurant, user_filters, user_food_types):
-	if not all([restaurant.isOpenNow, restaurant.isDeliveryEnabled]):
-		return False
+	# if not all([restaurant.isOpenNow, restaurant.isDeliveryEnabled]):
+	# 	return False
 	for _filter in user_filters:
 		rest_key: str = FILTERS_TO_FIELD[_filter]
 		if not restaurant.dict().get(rest_key):
@@ -110,5 +111,3 @@ def filter_restaurants(restaurants, user_filters: List[str], user_food_types):
 	return [rest for rest in restaurants if
 	        is_restaurant_in_filters(rest, user_filters, user_food_types)]
 
-
-main()
