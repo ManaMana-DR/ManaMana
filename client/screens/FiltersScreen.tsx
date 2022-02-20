@@ -226,10 +226,8 @@ const cuisineTypeOptions = [
 type CuisineTypeIds = typeof cuisineTypeOptions[number]["Id"];
 
 const preferencesOptions = [
-  { key: "kosher", text: "Kosher" },
-  { key: "notKosher", text: "Not Kosher" },
-  { key: "vegan", text: "Vegan" },
-  { key: "glutenFree", text: "Gluten Free" },
+  { key: "kosher", text: "Kosher", disableKeys: ["notKosher"] },
+  { key: "notKosher", text: "Not Kosher", disableKeys: ["kosher"] },
 ] as const;
 
 type PreferencesOptions = typeof preferencesOptions[number]["key"];
@@ -278,6 +276,7 @@ export default function FiltersScreen() {
             style={{ margin: 5 }}
             selected={preferences[preference.key]}
             onPress={() => handlePreferencePress(preference.key)}
+            disabled={preference.disableKeys.some((key) => preferences[key])}
           >
             {preference.text}
           </Chip>
