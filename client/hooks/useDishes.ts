@@ -14,19 +14,19 @@ const mockData: IDish[] = [{
 	id: '1',
 	name: 'המלאזית',
 	description: 'נודלס עם פסטו',
-	image: '',
+	image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
 	price: 65
 }, {
 	id: '2',
 	name: 'סינטה נודלס',
 	description: 'נודלס עם בקר',
-	image: '',
+	image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
 	price: 60
 }, {
 	id: '3',
 	name: 'נודלס ירקות',
 	description: 'נודלס עם ירקות',
-	image: '',
+	image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
 	price: 55
 }
 ];
