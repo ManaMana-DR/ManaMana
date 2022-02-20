@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { StyleSheet } from "react-native";
-import { Chip } from "react-native-paper";
+import { Button, Chip } from "react-native-paper";
 
 import { Text, View } from "../components/Themed";
 
@@ -316,6 +316,14 @@ export default function FiltersScreen() {
           </Chip>
         ))}
       </View>
+      <View
+        style={styles.separator}
+        lightColor="#eee"
+        darkColor="rgba(255,255,255,0.1)"
+      />
+
+
+      <Button mode="contained" >Apply</Button>
     </View>
   );
 }
