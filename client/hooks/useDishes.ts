@@ -2,38 +2,57 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { CuisineTypeIds, PreferencesType } from '../screens/FiltersScreen';
 
+export interface IRestaurant {
+	isDeliveryEnabled: boolean;
+	isGlutenFree: boolean;
+	isKosher: boolean;
+	isNotKosher: boolean;
+	isOpenNow: boolean;
+	isVegan: boolean;
+	minimumPriceForOrder: number;
+	// restaurantCuisineTypes: { pizza: 'פיצה', pasta: 'פסטה', veganFood: 'אוכל טבעוני' };
+	restaurantId: number;
+	restaurantLogoUrl: string;
+	restaurantName: string;
+	reviewsRank: number;
+	reviewsRankDecimal: number;
+}
+
 export interface IDish {
-	id: string;
-	name: string;
-	image: string;
-	price: number;
-	description: string;
+	categoryID: string;
+	categoryName: string;
+	dishDescription: string;
+	dishId: string;
+	dishImageUrl: string;
+	dishName: string;
+	dishPopularityScore: number;
+	dishPrice: number;
+	isPopularDish: boolean;
+	restaurant: IRestaurant;
+	isDeliveryEnabled: boolean;
+	isGlutenFree: boolean;
+	isKosher: boolean;
+	isNotKosher: boolean;
+	isOpenNow: boolean;
+	isVegan: boolean;
+	minimumPriceForOrder: number;
+	// restaurantCuisineTypes: { pizza: 'פיצה', pasta: 'פסטה', veganFood: 'אוכל טבעוני' };
+	restaurantLogoUrl: string;
+	restaurantName: string;
+	reviewsRank: number;
+	reviewsRankDecimal: number;
 }
 
-const mockData: IDish[] = [{
-	id: '1',
-	name: 'המלאזית',
-	description: 'נודלס עם פסטו',
-	image: '',
-	price: 65
-}, {
-	id: '2',
-	name: 'סינטה נודלס',
-	description: 'נודלס עם בקר',
-	image: '',
-	price: 60
-}, {
-	id: '3',
-	name: 'נודלס ירקות',
-	description: 'נודלס עם ירקות',
-	image: '',
-	price: 55
+export interface IResult {
+	restaurant: IRestaurant;
+	dish: IDish;
 }
-];
 
-async function getDishes(params: GetDishesParams): Promise<IDish[]> {
+const URL = 'https://4812-82-166-197-220.ngrok.io/random-dishes';
+
+async function getDishes(params: GetDishesParams): Promise<IResult[]> {
 	try {
-		const { data } = await axios.post<IDish[]>('https://e28b-82-166-197-220.ngrok.io/random-dishes', {
+		const { data } = await axios.post<IResult[]>(URL, {
 			userFilters: params.preferences,
 			userFoodTypes: params.cuisineTypes
 		});
@@ -47,7 +66,7 @@ async function getDishes(params: GetDishesParams): Promise<IDish[]> {
 type GetDishesParams = { preferences: PreferencesType[], cuisineTypes: CuisineTypeIds[] };
 
 export function useGetDishes(params: GetDishesParams) {
-	const [dishes, setDishes] = useState<IDish[]>();
+	const [dishes, setDishes] = useState<IResult[]>();
 	const [error, setError] = useState<Error>();
 	const [isLoading, setIsLoading] = useState(false);
 
