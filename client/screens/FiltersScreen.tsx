@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Button, Chip } from 'react-native-paper';
 
 import { Text, View } from '../components/Themed';
-import { ScreenProps } from 'types';
+import { ScreenProps } from '../types';
 
 const cuisineTypeOptions = [
 	{
@@ -259,7 +259,7 @@ export default function FiltersScreen({ navigation }: ScreenProps) {
 	};
 
 	const handleApplyClick = () => {
-		navigation.navigate('Tinder', { preferences, cuisineTypes });
+		navigation.push('Tinder', { preferences, cuisineTypes });
 	};
 
 	return (
@@ -341,6 +341,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
+		paddingVertical: 40,
 		overflow: 'scroll'
 	},
 	chipsContainer: {},
