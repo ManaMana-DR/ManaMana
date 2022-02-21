@@ -1,5 +1,8 @@
+import json
+from enum import Enum
 from typing import List
 
+import requests
 import uvicorn as uvicorn
 from fastapi import FastAPI, Form
 from fastapi.exceptions import RequestValidationError
@@ -30,168 +33,78 @@ class UserFilters(BaseModel):
 	userFoodTypes: List[str]
 
 
-# @app.get('/')
-# def home():
-# 	...
+class Actions(str, Enum):
+	next = "next"
+	order = "order"
+
+
+new = {
+	"response_type": "ephemeral",
+	"blocks": [
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "*Type:*\nPaid time off\n*When:*\nAug 10-Aug 13\n*Hours:* 16.0 (2 days)\n*Remaining balance:* 32.0 hours (4 days)\n*Comments:* \"Family in town, going camping!\""
+			},
+			"accessory": {
+				"type": "image",
+				"image_url": "https://api.slack.com/img/blocks/bkb_template_images/approvalsNewDevice.png",
+				"alt_text": "computer thumbnail"
+			}
+		},
+		{
+			"type": "actions",
+			"elements": [
+				{
+					"type": "button",
+					"text": {
+						"type": "plain_text",
+						"emoji": True,
+						"text": "Order"
+					},
+					"style": "primary",
+					"value": Actions.order
+				},
+				{
+					"type": "button",
+					"text": {
+						"type": "plain_text",
+						"emoji": True,
+						"text": "Next"
+					},
+					"style": "danger",
+					"value": Actions.next
+				}
+			]
+		}
+	]
+}
 
 
 @app.post('/slack/random-dishes')
-async def r(text: str = Form(...), user_name: str = Form(...)):
-	return {
-		"blocks": [
-			{
-				"type": "section",
-				"text": {
-					"type": "mrkdwn",
-					"text": "We found *205 Hotels* in New Orleans, LA from *12/14 to 12/17*"
-				},
-				"accessory": {
-					"type": "overflow",
-					"options": [
-						{
-							"text": {
-								"type": "plain_text",
-								"emoji": True,
-								"text": "Option One"
-							},
-							"value": "value-0"
-						},
-						{
-							"text": {
-								"type": "plain_text",
-								"emoji": True,
-								"text": "Option Two"
-							},
-							"value": "value-1"
-						},
-						{
-							"text": {
-								"type": "plain_text",
-								"emoji": True,
-								"text": "Option Three"
-							},
-							"value": "value-2"
-						},
-						{
-							"text": {
-								"type": "plain_text",
-								"emoji": True,
-								"text": "Option Four"
-							},
-							"value": "value-3"
-						}
-					]
-				}
-			},
-			{
-				"type": "divider"
-			},
-			{
-				"type": "section",
-				"text": {
-					"type": "mrkdwn",
-					"text": "*<fakeLink.toHotelPage.com|Windsor Court Hotel>*\n★★★★★\n$340 per night\nRated: 9.4 - Excellent"
-				},
-				"accessory": {
-					"type": "image",
-					"image_url": "https://api.slack.com/img/blocks/bkb_template_images/tripAgent_1.png",
-					"alt_text": "Windsor Court Hotel thumbnail"
-				}
-			},
-			{
-				"type": "context",
-				"elements": [
-					{
-						"type": "image",
-						"image_url": "https://api.slack.com/img/blocks/bkb_template_images/tripAgentLocationMarker.png",
-						"alt_text": "Location Pin Icon"
-					},
-					{
-						"type": "plain_text",
-						"emoji": True,
-						"text": "Location: Central Business District"
-					}
-				]
-			},
-			{
-				"type": "divider"
-			},
-			{
-				"type": "section",
-				"text": {
-					"type": "mrkdwn",
-					"text": "*<fakeLink.toHotelPage.com|The Ritz-Carlton New Orleans>*\n★★★★★\n$340 per night\nRated: 9.1 - Excellent"
-				},
-				"accessory": {
-					"type": "image",
-					"image_url": "https://api.slack.com/img/blocks/bkb_template_images/tripAgent_2.png",
-					"alt_text": "Ritz-Carlton New Orleans thumbnail"
-				}
-			},
-			{
-				"type": "context",
-				"elements": [
-					{
-						"type": "image",
-						"image_url": "https://api.slack.com/img/blocks/bkb_template_images/tripAgentLocationMarker.png",
-						"alt_text": "Location Pin Icon"
-					},
-					{
-						"type": "plain_text",
-						"emoji": True,
-						"text": "Location: French Quarter"
-					}
-				]
-			},
-			{
-				"type": "divider"
-			},
-			{
-				"type": "section",
-				"text": {
-					"type": "mrkdwn",
-					"text": "*<fakeLink.toHotelPage.com|Omni Royal Orleans Hotel>*\n★★★★★\n$419 per night\nRated: 8.8 - Excellent"
-				},
-				"accessory": {
-					"type": "image",
-					"image_url": "https://api.slack.com/img/blocks/bkb_template_images/tripAgent_3.png",
-					"alt_text": "Omni Royal Orleans Hotel thumbnail"
-				}
-			},
-			{
-				"type": "context",
-				"elements": [
-					{
-						"type": "image",
-						"image_url": "https://api.slack.com/img/blocks/bkb_template_images/tripAgentLocationMarker.png",
-						"alt_text": "Location Pin Icon"
-					},
-					{
-						"type": "plain_text",
-						"emoji": True,
-						"text": "Location: French Quarter"
-					}
-				]
-			},
-			{
-				"type": "divider"
-			},
-			{
-				"type": "actions",
-				"elements": [
-					{
-						"type": "button",
-						"text": {
-							"type": "plain_text",
-							"emoji": True,
-							"text": "Next 2 Results"
-						},
-						"value": "click_me_123"
-					}
-				]
-			}
-		]
-	}
+async def r(request: Request, text: str = Form(...), user_name: str = Form(...)):
+	d = await request.form()
+	dishes = get_random_dishes([], ['pizza'])
+	return new
+
+
+@app.post('/slack/interactive')
+async def r(request: Request):
+	d = await request.form()
+	payload = json.loads(d['payload'])
+	response_url = payload['response_url']
+	action = payload['actions'][0]['value']
+
+	if action == Actions.order:
+		response_message = {
+			"replace_original": "true",
+			"text": "Thanks for your request, we'll process it and get back to you."
+		}
+	elif action == Actions.next:
+		response_message = new
+
+	response = requests.post(url=response_url, json=response_message)
 
 
 @app.post("/random-dishes")
