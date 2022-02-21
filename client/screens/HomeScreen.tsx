@@ -5,7 +5,6 @@ import { StyleSheet } from "react-native";
 import { Text, View } from "../components/Themed";
 import { RootTabScreenProps } from "../types";
 import { CuisineTypeIds, PreferencesType } from "./FiltersScreen";
-import TinderDishes from "./TinderDishes";
 
 export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
   useEffect(() => {

@@ -69,7 +69,7 @@ const InfoText = styled.Text`
 `
 
 
-export default function TinderDishes({ route, navigation }: TinderProps) {
+export default function TinderDishes({ route }: TinderProps) {
 	const { preferences, cuisineTypes } = route.params;
 	const [lastDirection, setLastDirection] = useState()
 	const [isSwitchOn, setIsSwitchOn] = React.useState(false);
@@ -83,12 +83,6 @@ export default function TinderDishes({ route, navigation }: TinderProps) {
 	const outOfFrame = (name: string) => {
 		console.log(name + ' left the screen!')
 	}
-
-	useEffect(() => {
-		if (error) {
-			navigation.navigate('NotFound');
-		}
-	}, [error]);
 
 	if (isLoading) {
     return (
@@ -105,7 +99,20 @@ export default function TinderDishes({ route, navigation }: TinderProps) {
     );
   }
 
-
+  if (error) {
+	return (
+		<View
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+		  flex:1
+        }}
+      >
+		<Text>No Dishes Found</Text>
+      </View>
+	)
+  }
 
 	if (data) {
 		return (
