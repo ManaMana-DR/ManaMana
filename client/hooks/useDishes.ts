@@ -2,38 +2,20 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { CuisineTypeIds, PreferencesType } from '../screens/FiltersScreen';
 
-export interface IDish {
-	id: string;
-	name: string;
-	image: string;
-	price: number;
-	description: string;
+export interface IResult {
+	description: string
+	imageUrl: string
+	name: string
+	orderUrl: string
+	price: string
+	restaurantName: string
 }
 
-const mockData: IDish[] = [{
-	id: '1',
-	name: 'המלאזית',
-	description: 'נודלס עם פסטו',
-	image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-	price: 65
-}, {
-	id: '2',
-	name: 'סינטה נודלס',
-	description: 'נודלס עם בקר',
-	image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-	price: 60
-}, {
-	id: '3',
-	name: 'נודלס ירקות',
-	description: 'נודלס עם ירקות',
-	image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-	price: 55
-}
-];
+const URL = 'https://4812-82-166-197-220.ngrok.io/random-dishes';
 
-async function getDishes(params: GetDishesParams): Promise<IDish[]> {
+async function getDishes(params: GetDishesParams): Promise<IResult[]> {
 	try {
-		const { data } = await axios.post<IDish[]>('https://e28b-82-166-197-220.ngrok.io/random-dishes', {
+		const { data } = await axios.post<IResult[]>(URL, {
 			userFilters: params.preferences,
 			userFoodTypes: params.cuisineTypes
 		});
@@ -47,7 +29,7 @@ async function getDishes(params: GetDishesParams): Promise<IDish[]> {
 type GetDishesParams = { preferences: PreferencesType[], cuisineTypes: CuisineTypeIds[] };
 
 export function useGetDishes(params: GetDishesParams) {
-	const [dishes, setDishes] = useState<IDish[]>();
+	const [dishes, setDishes] = useState<IResult[]>();
 	const [error, setError] = useState<Error>();
 	const [isLoading, setIsLoading] = useState(false);
 
