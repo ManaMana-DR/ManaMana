@@ -6,6 +6,7 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { CuisineTypeIds, PreferencesType } from './screens/FiltersScreen';
 
 declare global {
   namespace ReactNavigation {
@@ -17,6 +18,7 @@ export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   Modal: undefined;
   NotFound: undefined;
+  Tinder: { preferences: PreferencesType[], cuisineTypes: CuisineTypeIds[]};
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
@@ -25,7 +27,7 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> = Nati
 >;
 
 export type RootTabParamList = {
-  TabOne: undefined;
+  Home: undefined;
   Filters: undefined;
 };
 
@@ -33,3 +35,6 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> = Composit
   BottomTabScreenProps<RootTabParamList, Screen>,
   NativeStackScreenProps<RootStackParamList>
 >;
+
+export type ScreenProps = NativeStackScreenProps<RootStackParamList>;
+export type TinderProps = NativeStackScreenProps<RootStackParamList, 'Tinder'>;
