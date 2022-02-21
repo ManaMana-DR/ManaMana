@@ -51,11 +51,12 @@ const CardImage = styled.ImageBackground`
     border-radius: 20px;
 `
 
-const CardTitle = styled.Text`
+const CardTitle = styled.View`
+	width: 100%;
     position: absolute;
     bottom: 0;
-    margin: 10px;
-    color: black;
+	padding: 6px 0;
+	background-color: rgba(0, 0, 0, 0.4);
 `
 
 const InfoText = styled.Text`
@@ -93,7 +94,7 @@ export default function TinderDishes({ route, navigation }: TinderProps) {
 		return <Text>Loading...</Text>;
 	}
 
-	
+
 
 	if (data) {
 		return (
@@ -104,7 +105,12 @@ export default function TinderDishes({ route, navigation }: TinderProps) {
 						<TinderCard key={item.name} onSwipe={(dir) => swiped(dir)} onCardLeftScreen={() => outOfFrame(item.name)}>
 							<Card>
 								<CardImage source={{ uri: item.imageUrl }}>
-									<CardTitle>{item.name}</CardTitle>
+									<CardTitle>
+									<Text style={{ textAlign: "center" }}>{item.name}</Text>
+									<Text style={{ textAlign: "center" }}>
+										{item.restaurantName}
+									</Text>
+									</CardTitle>
 								</CardImage>
 							</Card>
 						</TinderCard>
