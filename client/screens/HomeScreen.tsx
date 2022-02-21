@@ -6,7 +6,7 @@ import { RootTabScreenProps } from '../types';
 import Cards from '../components/Cards';
 import TinderDishes from './TinderDishes';
 
-export default function HomeScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
   return (
     <View style={styles.container}>
       {/* <Text style={styles.title}>Tab One</Text>

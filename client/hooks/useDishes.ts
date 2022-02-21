@@ -2,50 +2,13 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { CuisineTypeIds, PreferencesType } from '../screens/FiltersScreen';
 
-export interface IRestaurant {
-	isDeliveryEnabled: boolean;
-	isGlutenFree: boolean;
-	isKosher: boolean;
-	isNotKosher: boolean;
-	isOpenNow: boolean;
-	isVegan: boolean;
-	minimumPriceForOrder: number;
-	// restaurantCuisineTypes: { pizza: 'פיצה', pasta: 'פסטה', veganFood: 'אוכל טבעוני' };
-	restaurantId: number;
-	restaurantLogoUrl: string;
-	restaurantName: string;
-	reviewsRank: number;
-	reviewsRankDecimal: number;
-}
-
-export interface IDish {
-	categoryID: string;
-	categoryName: string;
-	dishDescription: string;
-	dishId: string;
-	dishImageUrl: string;
-	dishName: string;
-	dishPopularityScore: number;
-	dishPrice: number;
-	isPopularDish: boolean;
-	restaurant: IRestaurant;
-	isDeliveryEnabled: boolean;
-	isGlutenFree: boolean;
-	isKosher: boolean;
-	isNotKosher: boolean;
-	isOpenNow: boolean;
-	isVegan: boolean;
-	minimumPriceForOrder: number;
-	// restaurantCuisineTypes: { pizza: 'פיצה', pasta: 'פסטה', veganFood: 'אוכל טבעוני' };
-	restaurantLogoUrl: string;
-	restaurantName: string;
-	reviewsRank: number;
-	reviewsRankDecimal: number;
-}
-
 export interface IResult {
-	restaurant: IRestaurant;
-	dish: IDish;
+	description: string
+	imageUrl: string
+	name: string
+	orderUrl: string
+	price: string
+	restaurantName: string
 }
 
 const URL = 'https://4812-82-166-197-220.ngrok.io/random-dishes';

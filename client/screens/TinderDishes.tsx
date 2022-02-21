@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import React, { useState } from 'react'
 import styled from 'styled-components/native'
 import TinderCard from 'react-tinder-card'
-import { Avatar } from 'react-native-paper';
 import { useGetDishes } from '../hooks/useDishes'
 import { Switch } from 'react-native-switch';
 
@@ -67,19 +66,14 @@ const InfoText = styled.Text`
     z-index: -100;
     color: white;
 `
-const FlexContainer = styled.Text`
-display: flex;
-justify-content: space-between;
-width: 100%;
-max-width: 350px;
-`
+
 
 export default function TinderDishes({ route, navigation }: TinderProps) {
 	const { preferences, cuisineTypes } = route.params;
 	const [lastDirection, setLastDirection] = useState()
 	const [isSwitchOn, setIsSwitchOn] = React.useState(false);
 	const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
-	const { isLoading, error, data: dishes } = useGetDishes({ cuisineTypes, preferences });
+	const { isLoading, error, data } = useGetDishes({ cuisineTypes, preferences });
 
 	const swiped = (direction: any) => {
 		setLastDirection(direction)
@@ -99,29 +93,23 @@ export default function TinderDishes({ route, navigation }: TinderProps) {
 		return <Text>Loading...</Text>;
 	}
 
-	if (dishes) {
+	
+
+	if (data) {
 		return (
 			<Container>
 				<Header>Mana Mana</Header>
-				{dishes && <CardContainer>
-					{dishes.map((dishe) =>
-						<TinderCard key={dishe.name} onSwipe={(dir) => swiped(dir)} onCardLeftScreen={() => outOfFrame(dishe.name)}>
+				{data && <CardContainer>
+					{data.map((item) =>
+						<TinderCard key={item.name} onSwipe={(dir) => swiped(dir)} onCardLeftScreen={() => outOfFrame(item.name)}>
 							<Card>
-								<CardImage source={{ uri: dishe.image }}>
-									<CardTitle>{dishe.name}</CardTitle>
+								<CardImage source={{ uri: item.imageUrl }}>
+									<CardTitle>{item.name}</CardTitle>
 								</CardImage>
 							</Card>
 						</TinderCard>
 					)}
 				</CardContainer>}
-				<FlexContainer>
-					<Avatar.Icon style={{
-						backgroundColor: "white", //works on IOS only
-					}} color={"black"} size={48} icon="close" onClick={() => swiped("left")} />
-					<Avatar.Icon style={{
-						backgroundColor: "white", //works on IOS only
-					}} color={"red"} size={48} icon="cards-heart" onClick={() => swiped("right")} />
-				</FlexContainer>
 
 				{lastDirection ? <InfoText>You swiped {lastDirection}</InfoText> : <InfoText />}
 
