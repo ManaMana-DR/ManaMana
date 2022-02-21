@@ -18,7 +18,6 @@ export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   Modal: undefined;
   NotFound: undefined;
-  Tinder: { preferences: PreferencesType[], cuisineTypes: CuisineTypeIds[]};
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
@@ -29,6 +28,7 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> = Nati
 export type RootTabParamList = {
   Home: undefined;
   Filters: undefined;
+  Tinder: { preferences: PreferencesType[], cuisineTypes: CuisineTypeIds[]};
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<
@@ -37,4 +37,4 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> = Composit
 >;
 
 export type ScreenProps = NativeStackScreenProps<RootStackParamList>;
-export type TinderProps = NativeStackScreenProps<RootStackParamList, 'Tinder'>;
+export type TinderProps = NativeStackScreenProps<RootTabParamList, 'Tinder'>;

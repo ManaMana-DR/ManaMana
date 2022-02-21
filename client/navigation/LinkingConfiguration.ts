@@ -24,7 +24,7 @@ const linking: LinkingOptions<RootStackParamList> = {
             screens: {
               FiltersScreen: 'two',
             },
-          },
+          }
         },
       },
       Modal: 'modal',
