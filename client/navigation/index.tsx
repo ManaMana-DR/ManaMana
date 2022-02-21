@@ -61,18 +61,10 @@ function BottomTabNavigator({ route }: ScreenProps) {
 
 	return (
 		<BottomTab.Navigator
-			initialRouteName="Home"
+			initialRouteName="Filters"
 			screenOptions={{
 				tabBarActiveTintColor: Colors[colorScheme].tint
 			}}>
-			<BottomTab.Screen
-				name="Home"
-				component={HomeScreen}
-				options={({ navigation }: RootTabScreenProps<'Home'>) => ({
-					title: 'Home',
-					tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />
-				})}
-			/>
 			<BottomTab.Screen
 				name="Filters"
 				component={FiltersScreen}
@@ -84,7 +76,7 @@ function BottomTabNavigator({ route }: ScreenProps) {
 			<BottomTab.Screen
 				name="Tinder"
 				component={TinderDishes}
-				initialParams={{ preferences: [], cuisineTypes: []}}
+				initialParams={{ preferences: [], cuisineTypes: [] }}
 				options={{
 					title: 'Dishes',
 					tabBarIcon: ({ color }) => <TabBarIcon name="coffee" color={color} />
