@@ -8,7 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
+import { ColorSchemeName } from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -16,7 +16,7 @@ import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import HomeScreen from '../screens/HomeScreen';
 import FiltersScreen from '../screens/FiltersScreen';
-import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
+import { RootStackParamList, RootTabParamList, RootTabScreenProps, ScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import TinderDishes from '../screens/TinderDishes';
 
@@ -40,8 +40,8 @@ function RootNavigator() {
 	return (
 		<Stack.Navigator>
 			<Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-			<Stack.Screen name="Tinder" component={TinderDishes}
-			              options={{ title: 'select a dish', headerShown: false }} />
+			{/*<Stack.Screen name="Tinder" component={TinderDishes}*/}
+			{/*              options={{ title: 'select a dish', headerShown: false }} />*/}
 			<Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
 			<Stack.Group screenOptions={{ presentation: 'modal' }}>
 				<Stack.Screen name="Modal" component={ModalScreen} />
@@ -56,7 +56,7 @@ function RootNavigator() {
  */
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
-function BottomTabNavigator() {
+function BottomTabNavigator({ route }: ScreenProps) {
 	const colorScheme = useColorScheme();
 
 	return (
@@ -79,6 +79,15 @@ function BottomTabNavigator() {
 				options={{
 					title: 'Filters',
 					tabBarIcon: ({ color }) => <TabBarIcon name="filter" color={color} />
+				}}
+			/>
+			<BottomTab.Screen
+				name="Tinder"
+				component={TinderDishes}
+				initialParams={{ preferences: [], cuisineTypes: []}}
+				options={{
+					title: 'Dishes',
+					tabBarIcon: ({ color }) => <TabBarIcon name="coffee" color={color} />
 				}}
 			/>
 		</BottomTab.Navigator>

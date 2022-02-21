@@ -1,10 +1,10 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
-import { Button, Chip } from "react-native-paper";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
+import { StyleSheet } from 'react-native';
+import { Button, Chip } from 'react-native-paper';
 
-import { Text, View } from "../components/Themed";
-import { ScreenProps } from "../types";
+import { Text, View } from '../components/Themed';
+import { ScreenProps } from '../types';
 
 const cuisineTypeOptions = [
   {
@@ -271,7 +271,7 @@ export default function FiltersScreen({ navigation }: ScreenProps) {
     await AsyncStorage.setItem("preferences", JSON.stringify(preferences));
     await AsyncStorage.setItem("cuisineTypes", JSON.stringify(cuisineTypes));
 
-    navigation.push("Tinder", { preferences, cuisineTypes });
+    navigation.navigate('Root', { screen: 'Tinder', params: { preferences, cuisineTypes }})
   };
 
   return (
