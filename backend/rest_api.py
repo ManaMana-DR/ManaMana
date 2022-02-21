@@ -196,7 +196,7 @@ async def r(text: str = Form(...), user_name: str = Form(...)):
 
 @app.post("/random-dishes")
 async def root(body: UserFilters):
-	return get_random_dishes(body.userFilters, body.userFoodTypes)
+	return await get_random_dishes(body.userFilters, body.userFoodTypes)
 
 
 @app.get("/health")
