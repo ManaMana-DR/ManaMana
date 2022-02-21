@@ -9,10 +9,11 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from starlette import status
+from starlette.background import BackgroundTasks
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 
-from backend.main import get_random_dishes
+from backend.main import get_random_dishes, SelectedDish
 
 app = FastAPI()
 
@@ -38,55 +39,73 @@ class Actions(str, Enum):
 	order = "order"
 
 
-new = {
-	"response_type": "ephemeral",
-	"blocks": [
-		{
-			"type": "section",
-			"text": {
-				"type": "mrkdwn",
-				"text": "*Type:*\nPaid time off\n*When:*\nAug 10-Aug 13\n*Hours:* 16.0 (2 days)\n*Remaining balance:* 32.0 hours (4 days)\n*Comments:* \"Family in town, going camping!\""
-			},
-			"accessory": {
-				"type": "image",
-				"image_url": "https://api.slack.com/img/blocks/bkb_template_images/approvalsNewDevice.png",
-				"alt_text": "computer thumbnail"
-			}
-		},
-		{
-			"type": "actions",
-			"elements": [
-				{
-					"type": "button",
-					"text": {
-						"type": "plain_text",
-						"emoji": True,
-						"text": "Order"
-					},
-					"style": "primary",
-					"value": Actions.order
+def build_message(dish: SelectedDish):
+	return {
+		"replace_original": True,
+		"response_type": "ephemeral",
+		"blocks": [
+			{
+				"type": "section",
+				"text": {
+					"type": "mrkdwn",
+					"text": "*Your Dish:*\n"
+					        f"{dish.name} from {dish.restaurantName}\n"
+					        f"{dish.description}\n\n"
+					        f"*Price:* {dish.price}\n"
 				},
-				{
-					"type": "button",
-					"text": {
-						"type": "plain_text",
-						"emoji": True,
-						"text": "Next"
-					},
-					"style": "danger",
-					"value": Actions.next
+				"accessory": {
+					"type": "image",
+					"image_url": dish.imageUrl,
+					"alt_text": "computer thumbnail"
 				}
-			]
-		}
-	]
-}
+			},
+			{
+				"type": "divider"
+			},
+			{
+				"type": "actions",
+				"elements": [
+					{
+						"type": "button",
+						"text": {
+							"type": "plain_text",
+							"emoji": True,
+							"text": "Order"
+						},
+						"style": "primary",
+						"url": dish.orderUrl,
+						"value": dish.orderUrl,
+						"action_id": "button-action"
+					},
+					{
+						"type": "button",
+						"text": {
+							"type": "plain_text",
+							"emoji": True,
+							"text": "Next"
+						},
+						"style": "danger",
+						"value": Actions.next
+					}
+				]
+			}
+		]
+	}
+
+
+async def _run_in_bg(response_url: str):
+	dishes = await get_random_dishes([], ['soup'], 1)
+	response_message = build_message(dishes[0])
+	response = requests.post(url=response_url, json=response_message)
 
 
 @app.post('/slack/random-dishes')
-async def r(request: Request, text: str = Form(...), user_name: str = Form(...)):
-	d = await request.form()
-	dishes = get_random_dishes([], ['pizza'])
-	return new
+async def r(background_tasks: BackgroundTasks, response_url: str = Form(...)):
+	background_tasks.add_task(_run_in_bg, response_url)
+	return {
+		"replace_original": "true",
+		"text": "Preparing"
+	}
 
 
 @app.post('/slack/interactive')
@@ -96,15 +115,11 @@ async def r(request: Request):
 	response_url = payload['response_url']
 	action = payload['actions'][0]['value']
 
-	if action == Actions.order:
-		response_message = {
-			"replace_original": "true",
-			"text": "Thanks for your request, we'll process it and get back to you."
-		}
-	elif action == Actions.next:
-		response_message = new
-
-	response = requests.post(url=response_url, json=response_message)
+	if action == Actions.next:
+		dishes = await get_random_dishes([], ['soup'], 1)
+		dish = dishes[0]
+		response_message = build_message(dish)
+		response = requests.post(url=response_url, json=response_message)
 
 
 @app.post("/random-dishes")

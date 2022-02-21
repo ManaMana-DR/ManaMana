@@ -8,8 +8,6 @@ from pydantic import BaseModel, validator
 
 from consts import FILTERS_TO_FIELD
 
-NUMBER_OF_OPTIONS = 10
-
 
 class Restaurant(BaseModel):
 	restaurantId: int
@@ -52,9 +50,9 @@ class SelectedDish(BaseModel):
 	price: str
 
 
-async def get_random_dishes(filters, food_types) -> List[SelectedDish]:
+async def get_random_dishes(filters, food_types, num_of_restaurants=10) -> List[SelectedDish]:
 	restaurants = get_restaurants()
-	restaurants: List[Restaurant] = choose_restaurants(restaurants, filters, food_types)
+	restaurants: List[Restaurant] = choose_restaurants(restaurants, filters, food_types, num_of_restaurants)
 	selected_dishes = []
 	menus = await get_menus(restaurants)
 	for restaurant, menu in menus:
@@ -99,12 +97,12 @@ async def get_menu_for_restaurant(client, restaurant: Restaurant) -> Tuple[Resta
 	return restaurant, dishes
 
 
-def choose_restaurants(restaurants: List[Restaurant], user_filters, user_food_types):
+def choose_restaurants(restaurants: List[Restaurant], user_filters, user_food_types, num_of_restaurants=10):
 	if not restaurants:
 		raise ValueError("Got 0 restaurants")
 	restaurants = [rest for rest in restaurants if
 	               is_restaurant_in_filters(rest, user_filters, user_food_types)]
-	chosen_restaurants = choice(restaurants, NUMBER_OF_OPTIONS, p=get_probability(restaurants))
+	chosen_restaurants = choice(restaurants, num_of_restaurants, p=get_probability(restaurants))
 	return chosen_restaurants
 
 
