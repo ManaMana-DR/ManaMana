@@ -76,14 +76,13 @@ function Cards() {
     const [isSwitchOn, setIsSwitchOn] = React.useState(false);
     const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
     const { isLoading, error, data: dishes } = useGetDishes()
-    const [lastDirection, setLastDirection] = useState()
+    const [lastDirection, setLastDirection] = useState<string>()
 
-    const swiped = (direction) => {
-        console.log('removing: ' + nameToDelete)
+    const swiped = (direction: string) => {
         setLastDirection(direction)
     }
 
-    const outOfFrame = (name) => {
+    const outOfFrame = (name: string) => {
         console.log(name + ' left the screen!')
     }
 
@@ -96,11 +95,11 @@ function Cards() {
         <Container>
             <Header>Mana Mana</Header>
             {dishes && <CardContainer>
-                {dishes.map((dishe) =>
-                    <TinderCard key={dishe.name} onSwipe={(dir) => swiped(dir)} onCardLeftScreen={() => outOfFrame(dishe.name)}>
+                {dishes.map((dish) =>
+                    <TinderCard key={dish.name} onSwipe={(dir) => swiped(dir)} onCardLeftScreen={() => outOfFrame(dish.name)}>
                         <Card>
-                            <CardImage source={{ uri: dishe.image }}>
-                                <CardTitle>{dishe.name}</CardTitle>
+                            <CardImage source={{ uri: dish.image }}>
+                                <CardTitle>{dish.name}</CardTitle>
                             </CardImage>
                         </Card>
                     </TinderCard>
@@ -109,7 +108,7 @@ function Cards() {
             <FlexContainer>
                 <Avatar.Icon style={{
                     backgroundColor: "white", //works on IOS only
-                }} color={"black"} size={48} icon="close" onClick={() => swiped("left")} />
+                }} color={"black"} size={48} icon="close" onClick={() => { swiped("left") }} />
                 <Avatar.Icon style={{
                     backgroundColor: "white", //works on IOS only
                 }} color={"red"} size={48} icon="cards-heart" onClick={() => swiped("right")} />
