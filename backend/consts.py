@@ -194,3 +194,4 @@ FOOD_TYPE = [
 		"IconImageUrl": "https://tenbis-static.azureedge.net/restaurant-cuisine-type-icon-image/bar.png"
 	}
 ]
+# in_dict = {k,v for k,v in FOOD_TYPE}
