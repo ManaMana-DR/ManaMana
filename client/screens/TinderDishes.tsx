@@ -6,7 +6,7 @@ import styled from 'styled-components/native'
 import TinderCard from 'react-tinder-card'
 import { useGetDishes } from '../hooks/useDishes'
 import { Switch } from 'react-native-switch';
-
+import { ActivityIndicator } from 'react-native'
 
 const Container = styled.View`
     display: flex;
@@ -91,8 +91,19 @@ export default function TinderDishes({ route, navigation }: TinderProps) {
 	}, [error]);
 
 	if (isLoading) {
-		return <Text>Loading...</Text>;
-	}
+    return (
+      <View
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+		  flex:1
+        }}
+      >
+        <ActivityIndicator size='large' />
+      </View>
+    );
+  }
 
 
 
