@@ -6,7 +6,7 @@ import styled from 'styled-components/native'
 import TinderCard from 'react-tinder-card'
 import { useGetDishes } from '../hooks/useDishes'
 import { Switch } from 'react-native-switch';
-
+import { ActivityIndicator } from 'react-native'
 
 const Container = styled.View`
     display: flex;
@@ -69,7 +69,7 @@ const InfoText = styled.Text`
 `
 
 
-export default function TinderDishes({ route, navigation }: TinderProps) {
+export default function TinderDishes({ route }: TinderProps) {
 	const { preferences, cuisineTypes } = route.params;
 	const [lastDirection, setLastDirection] = useState()
 	const [isSwitchOn, setIsSwitchOn] = React.useState(false);
@@ -84,17 +84,35 @@ export default function TinderDishes({ route, navigation }: TinderProps) {
 		console.log(name + ' left the screen!')
 	}
 
-	useEffect(() => {
-		if (error) {
-			navigation.navigate('NotFound');
-		}
-	}, [error]);
-
 	if (isLoading) {
-		return <Text>Loading...</Text>;
-	}
+    return (
+      <View
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+		  flex:1
+        }}
+      >
+        <ActivityIndicator size='large' />
+      </View>
+    );
+  }
 
-
+  if (error) {
+	return (
+		<View
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+		  flex:1
+        }}
+      >
+		<Text>No Dishes Found</Text>
+      </View>
+	)
+  }
 
 	if (data) {
 		return (
