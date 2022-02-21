@@ -70,7 +70,7 @@ const InfoText = styled.Text`
 
 
 export default function TinderDishes({ route }: TinderProps) {
-	const { preferences, cuisineTypes } = route.params;
+	const { preferences, cuisineTypes } = route?.params;
 	const [lastDirection, setLastDirection] = useState()
 	const [isSwitchOn, setIsSwitchOn] = React.useState(false);
 	const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
